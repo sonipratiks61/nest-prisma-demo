@@ -129,7 +129,7 @@ model Product {
   userId                Int
   isFitmentRequired     Boolean
   isMeasurementRequired Boolean
-  ProductAttribute      ProductAttribute[]
+  attributes      ProductAttribute[]
 }
 
 model ProductAttribute {

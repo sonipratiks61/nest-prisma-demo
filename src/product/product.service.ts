@@ -67,6 +67,7 @@ export class ProductService {
     return await this.prisma.product.findMany({
       include: {
         category: true,
+        attributes: true
       },
     });
   }
@@ -91,6 +92,9 @@ export class ProductService {
       where: {
         categoryId: categoryId,
       },
+      include: {
+        attributes: true
+      }
     });
 
     return data;

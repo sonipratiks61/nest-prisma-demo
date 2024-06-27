@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -58,11 +59,18 @@ export class ProductController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  async findProductByCategoryId(@Res() res, @Body('categoryId') categoryId?: string) {
+  async findProductByCategoryId(@Res() res, @Query('categoryId') categoryId?: string) {
     try {
+      let data;
       const category= parseInt(categoryId,10)
-      const  data = await this.productService.findProductByCategoryId(category);
-      this.responseService.sendSuccess(res, 'Products fetched successfully', data);
+      if (!isNaN(category)) {
+        data = await this.productService.findProductByCategoryId(category);
+        this.responseService.sendSuccess(res, 'Products fetched successfully by subCategory', data);
+      } else {
+        data = await this.productService.findAll();
+        this.responseService.sendSuccess(res, 'Products fetched successfully', data);
+      }
+      
     } catch (error) {
       if(error instanceof BadRequestException)
       {
@@ -80,25 +88,6 @@ export class ProductController {
     }
   }
 
-  @Get()
-  @UseGuards(AuthGuard('jwt'))
-  async fetchAll(@Res() res) {
-    try {
-      const categories = await this.productService.findAll();
-      this.responseService.sendSuccess(
-        res,
-        'Product Fetched Successfully',
-        categories,
-      );
-    } catch (error) {
-
-      this.responseService.sendInternalError(
-        res,
-        error.message || 'Something Went Wrong',
-        error.message,
-      );
-    }
-  }
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
   async findOne(@Param('id', IdValidationPipe) id: string, @Res() res) {
