@@ -129,11 +129,7 @@ export class AuthController {
         'Reset password link has been sent to your email.',
       );
     } catch (error) {
-      console.error(error);
-      this.responseService.sendInternalError(
-        res,
-        'An error occurred while attempting to send the reset password link.',
-      );
+      this.responseService.sendInternalError(res, error.message);
     }
   }
 
